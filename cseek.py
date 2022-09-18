@@ -141,8 +141,11 @@ if __name__ == '__main__':
             print("\n\n************************** Extended Scan Begins ************************")
         else:
             print("\n\n**************************** Basic Scan Begins *************************")
-
+            
+        start_time = datetime.now()
         cseek.ping_target()
+        final_time = datetime.now()
+        print(f"\ncseek done, needed time: {final_time - start_time}")
     except IndexError:
         parser.print_help()
     except AttributeError:
