@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
-from argparse import ArgumentParser
-from logging import basicConfig, getLogger, INFO
-from socket import socket, AF_INET, SOCK_STREAM, getservbyport, gethostbyaddr, herror
-from subprocess import check_output, CalledProcessError
-from time import strftime
-from os import mkdir
+from argparse import ArgumentParser # command line arguments
+from logging import basicConfig, getLogger, INFO # runtime logging
+from socket import socket, AF_INET, SOCK_STREAM, getservbyport, gethostbyaddr, herror # port scanning
+from subprocess import check_output, CalledProcessError # process calling (ping) 
+from time import strftime # formatted time specification
+from os import mkdir # output file creation
 from sys import exit
-from datetime import datetime
+from datetime import datetime # current timestamp
 
 """
 
@@ -41,13 +41,13 @@ class CSeek:
         try:
             mkdir("output")
             with open("output/cseek_output.txt", 'w') as output_file:
-                output_file.write("cseek - output file\n")
+                output_file.write("cseek - output file\n") # creating output file headline
             print("output file created successfully")
         except FileExistsError:
             print("output file check: successful")
             LOGGER.info("output file check: successful")
 
-    def port_check(self):
+    def port_check(self): 
         if self.begin_port > self.final_port:
             print("port check: invalid order")
             exit(1)
@@ -61,6 +61,7 @@ class CSeek:
         LOGGER.info("port check: successful")
 
     def octet_check(self):
+        # compare each given octet individually to avoid misconfigurations
         single_octet = self.target_address.split(".")
 
         if int(single_octet[0]) <= 0 or int(single_octet[0]) >= 253:
@@ -80,9 +81,10 @@ class CSeek:
         cseek.port_check()
 
         for port in range(self.begin_port, self.final_port):
+            # creating a socket connection using IPv4 and TCP configurations
             with socket(AF_INET, SOCK_STREAM) as port_scan:
                 port_scan.settimeout(5)
-                result = port_scan.connect_ex((target_address, port))
+                result = port_scan.connect_ex((target_address, port)) # returns an error indicator instead of raising an exception
 
                 if result == 0:
                     try:
@@ -94,21 +96,24 @@ class CSeek:
 
     def ping_target(self):
         print(f"\nstart scanning at {datetime.now()}\n")
-        scan_count = int(self.final_host) - int(self.begin_host) + 1
-
+        scan_count = int(self.final_host) - int(self.begin_host) + 1 # start point to count runtime value
+           
+        # count the scan range
         for octet in range(int(self.begin_host), int(self.final_host) + 1):
-            final_address = f"{self.target_address}.{octet}"
+            final_address = f"{self.target_address}.{octet}" # added to the given 24 bit value an 8 bit value to generate a valid IPv4 address
             scan_count -= 1
 
             try:
+                # call a ping process to identify the target host status
                 check_output(["ping", "-c", "2", final_address])
+                # extract result from output list
                 print(f"{final_address} ( {gethostbyaddr(final_address)[0]} ): connection success, count={scan_count}, time={strftime('%H:%M:%S')}")
                 with open("output/cseek_output.txt", 'a') as write_output:
                     write_output.write(
                         f"{final_address} ( {gethostbyaddr(final_address)[0]} ): connection success, count={scan_count}, time={strftime('%H:%M:%S')}\n"
                     )
                 if self.activate_port_scan != "off":
-                    cseek.scan_port_range(final_address)
+                    cseek.scan_port_range(final_address) # activate port scan
             except CalledProcessError:
                 print(f"{final_address}: connection failed, count={scan_count}, time={strftime('%H:%M:%S')}")
             except herror:
@@ -147,7 +152,7 @@ if __name__ == '__main__':
             print("\n\n**************************** Basic Scan Begins *************************")
             
         start_time = datetime.now()
-        cseek.ping_target()
+        cseek.ping_target() # get targets status (if enabled scan for open ports)
         final_time = datetime.now()
         print(f"\ncseek done, needed time: {final_time - start_time}")
     except IndexError:
