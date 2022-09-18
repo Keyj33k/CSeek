@@ -2,7 +2,7 @@
 
 from argparse import ArgumentParser
 from logging import basicConfig, getLogger, INFO
-from socket import socket, AF_INET, SOCK_STREAM, getservbyport
+from socket import socket, AF_INET, SOCK_STREAM, getservbyport, gethostbyaddr
 from subprocess import check_output, CalledProcessError
 from time import strftime
 from os import mkdir
@@ -101,9 +101,11 @@ class CSeek:
 
             try:
                 check_output(["ping", "-c", "2", final_address])
-                print(f"{final_address}: connection success, count={scan_count}, time={strftime('%H:%M:%S')}")
+                print(f"{final_address} ( {gethostbyaddr(final_address)[0]} ): connection success, count={scan_count}, time={strftime('%H:%M:%S')}")
                 with open("output/cseek_output.txt", 'a') as write_output:
-                    write_output.write(f"{final_address}: connection success, count={scan_count}, time={strftime('%H:%M:%S')}\n")
+                    write_output.write(
+                        f"{final_address} ( {gethostbyaddr(final_address)[0]} ): connection success, count={scan_count}, time={strftime('%H:%M:%S')}\n"
+                    )
                 if self.activate_port_scan != "off":
                     cseek.scan_port_range(final_address)
             except CalledProcessError:
@@ -151,3 +153,4 @@ if __name__ == '__main__':
         parser.print_help()
     except KeyboardInterrupt:
         print("\ncseek exits due interruption")
+
