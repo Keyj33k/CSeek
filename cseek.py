@@ -104,7 +104,9 @@ class CSeek:
                 check_output(["ping", "-c", "2", final_address])
                 print(f"{final_address} ( {gethostbyaddr(final_address)[0]} ): connection success, count={scan_count}, time={strftime('%H:%M:%S')}")
                 with open("output/cseek_output.txt", 'a') as write_output:
-                    write_output.write(f"{final_address} ( {gethostbyaddr(final_address)[0]} ): connection success, count={scan_count}, time={strftime('%H:%M:%S')}\n")
+                    write_output.write(
+                        f"{final_address} ( {gethostbyaddr(final_address)[0]} ): connection success, count={scan_count}, time={strftime('%H:%M:%S')}\n"
+                    )
                 if self.activate_port_scan != "off":
                     cseek.scan_port_range(final_address)
             except CalledProcessError:
