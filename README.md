@@ -75,7 +75,7 @@ options:
 ## 🎬 cseek Output Example
 <div align="center">
   
-![demo](https://github.com/Keyj33k/cseek-ClientIdentifier-Python/blob/main/img/cseek_Python_Example.png?raw=true)
+![demo](https://github.com/Keyj33k/cseek-ClientIdentifier-Python/blob/main/img/cseek_example.png?raw=true)
   
 </div>
 
