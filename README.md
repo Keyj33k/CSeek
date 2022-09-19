@@ -52,7 +52,7 @@ cseek - Network Client Identifier
 options:
   -h, --help            show this help message and exit
   -a address, --addr address
-                        address to ping - first three octets only
+                        address to ping (first three octets only)
   -b begin_host, --begin begin_host
                         host where the scan should start
   -f final_host, --final final_host
