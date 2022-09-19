@@ -158,7 +158,7 @@ if __name__ == '__main__':
 
     parser.add_argument(
         "-a", "--addr", type=str, metavar="address",
-        help="address to ping - first three octets only", required=True
+        help="address to ping (first three octets only)", required=True
     )
     parser.add_argument(
         "-b", "--begin", type=str, metavar="begin_host",
