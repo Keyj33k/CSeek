@@ -13,13 +13,16 @@ from datetime import datetime  # current timestamp
 
 cseek - Client Identifier
 
+Ping target ipv4 addresses to get the status and if enabled scans for open ports
+from the current address.
+
 Author: Keyjeek
 Date: 18.09.22
 Version: 0.0.2
 
 """
 
-basicConfig(filename="logfile.log", format="%(asctime)s\t%(message)s", filemode='w')
+basicConfig(filename="logfile.log", format="[%(levelname)s] %(asctime)s\t%(message)s", filemode='w')
 LOGGER = getLogger()
 LOGGER.setLevel(INFO)
 
@@ -29,6 +32,10 @@ class CSeek:
             self, target_address: str, begin_host: str, final_host: str,
             begin_port: int, final_port: int, activate_port_scan: str
     ):
+        """
+        :param target_address: the first three octets of the address created during processing
+        :param activate_port_scan: string which will enable or disable the port scan (only on/off are allowed)
+        """
         self.activate_port_scan = activate_port_scan
         self.final_port = final_port
         self.begin_port = begin_port
@@ -40,10 +47,10 @@ class CSeek:
     def create_output_file():
         try:
             mkdir("output")
-            
+
             with open("output/cseek_output.txt", 'w') as output_file:
                 output_file.write("cseek - output file\n")  # creating output file headline
-                
+
             LOGGER.info("output file check: created successfully")
         except FileExistsError:
             LOGGER.info("output file check: successful")
@@ -51,28 +58,36 @@ class CSeek:
     def port_check(self):
         if self.begin_port > self.final_port:
             print("port check: invalid order")
+            LOGGER.error("port check: invalid order")
             exit(1)
         elif self.begin_port >= 65534 or self.begin_port <= 0:
             print(f"port check: port {self.begin_port} is invalid")
+            LOGGER.error(f"port check: port {self.begin_port} is invalid")
             exit(1)
         elif self.final_port >= 65535 or self.final_port <= 0:
             print(f"port check: port {self.final_port} is invalid")
+            LOGGER.error(print(f"port check: port {self.final_port} is invalid"))
             exit(1)
         else:
             LOGGER.info("port check: successful")
 
     def octet_check(self):
-        # compare each given octet individually to avoid misconfigurations
         split_address = self.target_address.split(".")
 
         for octet in range(3): # loop through each single octet to compare
             if int(split_address[octet]) <= 0 or int(split_address[octet]) >= 253:
                 print(f"octet check: octet {octet + 1} ( {split_address[octet]} ) is invalid")
+                LOGGER.error(f"octet check: octet {octet + 1} ( {split_address[octet]} ) is invalid")
                 exit(1)
             else:
                 LOGGER.info(f"octet check: octet {octet + 1} ( {split_address[octet]} ) passed")
 
     def scan_port_range(self, target_address):
+        """
+        Port scanning function (will be enabled if --unlock param is set to 'on').
+
+        :param target_address: finally built valid ipv4 address
+        """
         cseek.port_check()
         open_ports = 0
 
@@ -87,7 +102,7 @@ class CSeek:
                     open_ports += 1
                     try:
                         print(f" |\tproto=TCP, port={port}, status=open, service={getservbyport(port)}")
-                        
+
                         with open("output/cseek_output.txt", 'a') as write_output:
                             write_output.write(
                                 f" |\tproto=TCP, port={port}, status=open, service={getservbyport(port)}\n"
@@ -121,15 +136,14 @@ class CSeek:
                     f"[+] {final_address} ( {gethostbyaddr(final_address)[0]} ): connected successfully, " + \
                     f"count={scan_count}, time={strftime('%H:%M:%S')}"
                 )
-                
+
                 with open("output/cseek_output.txt", 'a') as write_output:
                     write_output.write(
                         f"\n[+] {final_address} ( {gethostbyaddr(final_address)[0]} ): connected successfully, " + \
                         f"count={scan_count}, time={strftime('%H:%M:%S')}\n"
                     )
 
-                if self.activate_port_scan != "off":
-                    cseek.scan_port_range(final_address) # activate port scan
+                if self.activate_port_scan != "off": cseek.scan_port_range(final_address) # activate port scan
             except CalledProcessError:
                 print(f"{final_address}: connection failed, count={scan_count}, time={strftime('%H:%M:%S')}")
             except herror:
