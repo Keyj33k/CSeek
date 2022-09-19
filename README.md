@@ -58,7 +58,7 @@ options:
   -f final_host, --final final_host
                         host where the scan should end
   -u on/off, --unlock on/off
-                        activate or deactivate portscan (on/off)
+                        activate or deactivate portscan
   -s start_port, --start start_port
                         port where the scan should start
   -l last_port, --last last_port
@@ -75,7 +75,7 @@ options:
 ## 🎬 cseek Output Example
 <div align="center">
   
-![demo](https://github.com/Keyj33k/cseek-ClientIdentifier-Python/blob/main/img/cseek_example.png?raw=true)
+![demo](https://github.com/Keyj33k/cseek-ClientIdentifier-Python/blob/main/img/cseek_output_example.png?raw=true)
   
 </div>
 
