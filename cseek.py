@@ -65,7 +65,7 @@ class CSeek:
         # compare each given octet individually to avoid misconfigurations
         split_address = self.target_address.split(".")
 
-        for octet in range(3):
+        for octet in range(3): # loop through each single octet to compare
             if int(split_address[octet]) <= 0 or int(split_address[octet]) >= 253:
                 print(f"octet check: octet {octet + 1} ( {split_address[octet]} ) is invalid")
                 exit(1)
@@ -90,8 +90,7 @@ class CSeek:
                         
                         with open("output/cseek_output.txt", 'a') as write_output:
                             write_output.write(
-                                f" |\tproto=TCP, port={port}, status=open, service={getservbyport(port)}\n"
-                            )
+                                f" |\tproto=TCP, port={port}, status=open, service={getservbyport(port)}\n")
                     except OSError:
                         print(f" |\tproto=TCP, port={port}, status=open, service=unknown")
 
@@ -99,10 +98,7 @@ class CSeek:
         port_range = self.final_port - self.begin_port
         closed_ports = port_range - open_ports
 
-        if port_range == closed_ports:
-            print(f" |  port scan done: total={port_range} closed=all")
-        else:
-            print(f" |  port scan done: total={port_range} open={open_ports} closed={closed_ports}")
+        print(f" |  port scan done: total={port_range} open={open_ports} closed={closed_ports}")
 
     def ping_target(self):
         scan_count = int(self.final_host) - int(self.begin_host) + 1  # start point to count runtime value
@@ -128,7 +124,7 @@ class CSeek:
                 
                 with open("output/cseek_output.txt", 'a') as write_output:
                     write_output.write(
-                        f"[+] {final_address} ( {gethostbyaddr(final_address)[0]} ): connected successfully, " + \
+                        f"\n[+] {final_address} ( {gethostbyaddr(final_address)[0]} ): connected successfully, " + \
                         f"count={scan_count}, time={strftime('%H:%M:%S')}\n"
                     )
 
@@ -155,11 +151,11 @@ class CSeek:
 
 if __name__ == '__main__':
     parser = ArgumentParser(description="cseek - Network Client Identifier")
-    
+
     def display_help():
         parser.print_help()
         exit(1)
-        
+
     parser.add_argument(
         "-a", "--addr", type=str, metavar="address",
         help="address to ping - first three octets only", required=True
@@ -179,9 +175,9 @@ if __name__ == '__main__':
     parser.add_argument("-s", "--start", type=int, metavar="start_port", help="port where the scan should start")
     parser.add_argument("-l", "--last", type=int, metavar="last_port", help="port where the scan should end")
     args = parser.parse_args()
-    address = args.addr
-    
+
     # config checks
+    address = args.addr
     if args.unlock != "off" and args.unlock != "on":
         display_help()
     elif int(args.begin) > 252 or int(args.final) > 253:
