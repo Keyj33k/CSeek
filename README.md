@@ -8,7 +8,7 @@ Network Recon Tool: IPSweep With Additional Port Scanning Config.
 
 <div align="center">
 
-![version](https://img.shields.io/badge/Version-0.0.1-informational?style=flat&logo=&logoColor=white&color=red) ![stars](https://img.shields.io/github/stars/Keyj33k/cseek-ClientIdentifier-Python?style=social) ![forks](https://img.shields.io/github/forks/Keyj33k/cseek-ClientIdentifier-Python?label=Forks&logo=&logoColor=white&color=blue) ![languages](https://img.shields.io/github/languages/count/Keyj33k/cseek-ClientIdentifier-Python?style=social&logo=&logoColor=white&color=blue) ![issues](https://img.shields.io/github/last-commit/Keyj33k/cseek-ClientIdentifier-Python?style=flat&logo=&logoColor=white&color=blue) ![platform](https://img.shields.io/badge/Platform-Linux/Windows-informational?style=flat&logo=&logoColor=white&color=green) 
+![version](https://img.shields.io/badge/Version-0.0.2-informational?style=flat&logo=&logoColor=white&color=red) ![stars](https://img.shields.io/github/stars/Keyj33k/cseek-ClientIdentifier-Python?style=social) ![forks](https://img.shields.io/github/forks/Keyj33k/cseek-ClientIdentifier-Python?label=Forks&logo=&logoColor=white&color=blue) ![languages](https://img.shields.io/github/languages/count/Keyj33k/cseek-ClientIdentifier-Python?style=social&logo=&logoColor=white&color=blue) ![issues](https://img.shields.io/github/last-commit/Keyj33k/cseek-ClientIdentifier-Python?style=flat&logo=&logoColor=white&color=blue) ![platform](https://img.shields.io/badge/Platform-Linux/Windows-informational?style=flat&logo=&logoColor=white&color=green) 
 
 </div>
 
