@@ -46,6 +46,7 @@ python3 cseek.py -h
 
 ```
 usage: cseek.py [-h] -a address -b begin_host -f final_host -u on/off [-s start_port] [-l last_port]
+example: python3 cseek.py -a 192.168.2 -b 1 -f 30 -u on -s 20 -l 100
 
 cseek - Network Client Identifier
 
