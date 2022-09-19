@@ -90,14 +90,14 @@ class CSeek:
                         
                         with open("output/cseek_output.txt", 'a') as write_output:
                             write_output.write(
-                                f" |\tproto=TCP, port={port}, status=open, service={getservbyport(port)}\n")
+                                f" |\tproto=TCP, port={port}, status=open, service={getservbyport(port)}\n"
+                            )
                     except OSError:
                         print(f" |\tproto=TCP, port={port}, status=open, service=unknown")
 
         # statistics calculation section for port scanning process
         port_range = self.final_port - self.begin_port
         closed_ports = port_range - open_ports
-
         print(f" |  port scan done: total={port_range} open={open_ports} closed={closed_ports}")
 
     def ping_target(self):
@@ -115,12 +115,12 @@ class CSeek:
             try:
                 # call a ping process to identify the target host status
                 check_output(["ping", "-c", "2", final_address])
+                active_host_count += 1
                 # extract result from output list
                 print(
                     f"[+] {final_address} ( {gethostbyaddr(final_address)[0]} ): connected successfully, " + \
                     f"count={scan_count}, time={strftime('%H:%M:%S')}"
                 )
-                active_host_count += 1
                 
                 with open("output/cseek_output.txt", 'a') as write_output:
                     write_output.write(
@@ -175,9 +175,9 @@ if __name__ == '__main__':
     parser.add_argument("-s", "--start", type=int, metavar="start_port", help="port where the scan should start")
     parser.add_argument("-l", "--last", type=int, metavar="last_port", help="port where the scan should end")
     args = parser.parse_args()
+    address = args.addr
 
     # config checks
-    address = args.addr
     if args.unlock != "off" and args.unlock != "on":
         display_help()
     elif int(args.begin) > 252 or int(args.final) > 253:
