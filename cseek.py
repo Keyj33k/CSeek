@@ -170,7 +170,7 @@ if __name__ == '__main__':
     )
     parser.add_argument(
         "-u", "--unlock", type=str, metavar="on/off",
-        help="activate or deactivate portscan (on/off)", required=True
+        help="activate or deactivate portscan", required=True
     )
     parser.add_argument("-s", "--start", type=int, metavar="start_port", help="port where the scan should start")
     parser.add_argument("-l", "--last", type=int, metavar="last_port", help="port where the scan should end")
