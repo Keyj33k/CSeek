@@ -146,8 +146,11 @@ class CSeek:
                 if self.activate_port_scan != "off": cseek.scan_port_range(final_address) # activate port scan
             except CalledProcessError: # raises if check_output returns a non-zero exit status
                 print(f"{final_address}: connection failed, count={scan_count}, time={strftime('%H:%M:%S')}")
-            except herror:
-                print(f"{final_address}: connection failed, count={scan_count}, time={strftime('%H:%M:%S')}")
+            except herror: 
+                print(
+                    f"[+] {final_address} ( unknown ): connected successfully, " + \
+                    f"count={scan_count}, time={strftime('%H:%M:%S')}"
+                )
 
         # statistics calculation section for ipsweep scanning process
         scan_end = datetime.now()
