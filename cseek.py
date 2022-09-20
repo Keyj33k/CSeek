@@ -131,7 +131,6 @@ class CSeek:
                 # call a ping process to identify the target host status
                 check_output(["ping", "-c", "2", final_address]) 
                 active_host_count += 1
-                # extract result from output list
                 print(
                     f"[+] {final_address} ( {gethostbyaddr(final_address)[0]} ): connected successfully, " + \
                     f"count={scan_count}, time={strftime('%H:%M:%S')}"
