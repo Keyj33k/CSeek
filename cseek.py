@@ -13,7 +13,7 @@ from datetime import datetime  # current timestamp
 
 cseek - Client Identifier
 
-Ping target ipv4 addresses to get the status and if enabled scans for open ports
+Ping ranges of ipv4 addresses to get the status and if enabled scans for open ports
 from the current address.
 
 Author: Keyjeek
@@ -33,8 +33,8 @@ class CSeek:
             begin_port: int, final_port: int, activate_port_scan: str
     ):
         """
-        :param target_address: the first three octets of the address created during processing
-        :param activate_port_scan: string which will enable or disable the port scan (only on/off are allowed)
+        :param target_address: the first three octets of the addresses created during processing
+        :param activate_port_scan: String responsible for port scan activation (only on/off are allowed)
         """
         self.activate_port_scan = activate_port_scan
         self.final_port = final_port
@@ -86,7 +86,7 @@ class CSeek:
         """
         Port scanning function (will be enabled if --unlock param is set to 'on').
 
-        :param target_address: finally built valid ipv4 address
+        :param target_address: previously built valid ipv4 address
         """
         cseek.port_check()
         open_ports = 0
@@ -129,7 +129,7 @@ class CSeek:
 
             try:
                 # call a ping process to identify the target host status
-                check_output(["ping", "-c", "2", final_address])
+                check_output(["ping", "-c", "2", final_address]) 
                 active_host_count += 1
                 # extract result from output list
                 print(
@@ -144,7 +144,7 @@ class CSeek:
                     )
 
                 if self.activate_port_scan != "off": cseek.scan_port_range(final_address) # activate port scan
-            except CalledProcessError:
+            except CalledProcessError: # raises if check_output returns a non-zero exit status
                 print(f"{final_address}: connection failed, count={scan_count}, time={strftime('%H:%M:%S')}")
             except herror:
                 print(f"{final_address}: connection failed, count={scan_count}, time={strftime('%H:%M:%S')}")
