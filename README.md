@@ -14,7 +14,7 @@ Network Recon Tool: IPSweep With Additional Port Scanning Config.
 
 <div align="center">
 
-<a href="https://github.com/Keyj33k/cseek-ClientIdentifier-Python/archive/refs/heads/main.zip"><img src="https://github.com/Keyj33k/cseek-ClientIdentifier-Python/blob/main/img/cseek.png?raw=true" alt="banner"/></a>
+<a href="https://github.com/Keyj33k/cseek-ClientIdentifier-Python/archive/refs/heads/main.zip"><img src="https://github.com/Keyj33k/cseek-ClientIdentifier-Python/blob/main/img/cseek_banner.svg" alt="banner"/></a>
   
 </div>
 
