@@ -8,7 +8,7 @@
 
 ## cseekers Mission
 - scan address range in local network to detect reachable devices<br>
-- optional port scanning config for live hosts to work faster and more efficient<br>
+- optional port scanning config for live hosts and determining of services behind open ports<br>
 - store succeed results to a file for saving a detailed summary<br>
 
 ## :rocket: Getting Started: 
