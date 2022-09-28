@@ -82,6 +82,13 @@ class CSeek:
             else:
                 LOGGER.info(f"octet check: octet {octet + 1} ( {split_address[octet]} ) passed")
 
+    @staticmethod
+    def write_outp_p(port: int, service: str): # save port scanning output
+        with open("output/cseek_output.txt", 'a') as write_output:
+            write_output.write(
+                f" |\tproto=TCP, port={port}, status=open, service={service}\n"
+        )
+
     def scan_port_range(self, target_address):
         """
         Port scanning function (will be enabled if --unlock param is set to 'on').
@@ -102,18 +109,23 @@ class CSeek:
                     open_ports += 1
                     try:
                         print(f" |\tproto=TCP, port={port}, status=open, service={getservbyport(port)}")
-
-                        with open("output/cseek_output.txt", 'a') as write_output:
-                            write_output.write(
-                                f" |\tproto=TCP, port={port}, status=open, service={getservbyport(port)}\n"
-                            )
+                        cseek.write_outp_p(port, getservbyport(port))
                     except OSError:
                         print(f" |\tproto=TCP, port={port}, status=open, service=unknown")
+                        cseek.write_outp_p(port, "unknown")
 
         # statistics calculation section for port scanning process
         port_range = self.final_port - self.begin_port
         closed_ports = port_range - open_ports
         print(f" |  port scan done: total={port_range} open={open_ports} closed={closed_ports}")
+
+    @staticmethod
+    def write_outp_i(saved_address: str, status: str, count: int): # save ipsweep output
+        with open("output/cseek_output.txt", 'a') as write_output:
+            write_output.write(
+                f"\n[+] {saved_address} ( {status} ): connected successfully, " + \
+                f"count={count}, time={strftime('%H:%M:%S')}\n"
+        )
 
     def ping_target(self):
         scan_count = int(self.final_host) - int(self.begin_host) + 1  # start point to count runtime value
@@ -135,13 +147,7 @@ class CSeek:
                     f"[+] {final_address} ( {gethostbyaddr(final_address)[0]} ): connected successfully, " + \
                     f"count={scan_count}, time={strftime('%H:%M:%S')}"
                 )
-
-                with open("output/cseek_output.txt", 'a') as write_output:
-                    write_output.write(
-                        f"\n[+] {final_address} ( {gethostbyaddr(final_address)[0]} ): connected successfully, " + \
-                        f"count={scan_count}, time={strftime('%H:%M:%S')}\n"
-                    )
-
+                cseek.write_outp_i(final_address, gethostbyaddr(final_address)[0], scan_count)
                 if self.activate_port_scan != "off": cseek.scan_port_range(final_address) # activate port scan
             except CalledProcessError: # raises if check_output returns a non-zero exit status
                 print(f"{final_address}: connection failed, count={scan_count}, time={strftime('%H:%M:%S')}")
@@ -150,6 +156,7 @@ class CSeek:
                     f"[+] {final_address} ( unknown ): connected successfully, " + \
                     f"count={scan_count}, time={strftime('%H:%M:%S')}"
                 )
+                cseek.write_outp_i(final_address, "unknown", scan_count)
 
         # statistics calculation section for ipsweep scanning process
         scan_end = datetime.now()
