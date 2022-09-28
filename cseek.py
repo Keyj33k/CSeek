@@ -47,7 +47,6 @@ class CSeek:
     def create_output_file():
         try:
             mkdir("output")
-
             with open("output/cseek_output.txt", 'w') as output_file:
                 output_file.write("cseek - output file\n")  # creating output file headline
 
@@ -103,9 +102,7 @@ class CSeek:
             with socket(AF_INET, SOCK_STREAM) as port_scan:
                 port_scan.settimeout(5)
                 # returns an error indicator instead of raising an exception
-                result = port_scan.connect_ex((target_address, port))
-
-                if result == 0:
+                if port_scan.connect_ex((target_address, port)) == 0:
                     open_ports += 1
                     try:
                         print(f" |\tproto=TCP, port={port}, status=open, service={getservbyport(port)}")
