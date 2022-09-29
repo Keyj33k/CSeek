@@ -1,6 +1,6 @@
 <div align="center">
 
-![version](https://img.shields.io/badge/Version-0.0.2-informational?style=flat&logo=&logoColor=white&color=red) ![stars](https://img.shields.io/github/stars/Keyj33k/cseek-ClientIdentifier-Python?style=social) ![forks](https://img.shields.io/github/forks/Keyj33k/cseek-ClientIdentifier-Python?label=Forks&logo=&logoColor=white&color=blue) ![languages](https://img.shields.io/github/languages/count/Keyj33k/cseek-ClientIdentifier-Python?style=social&logo=&logoColor=white&color=blue) ![issues](https://img.shields.io/github/last-commit/Keyj33k/cseek-ClientIdentifier-Python?style=flat&logo=&logoColor=white&color=blue) ![platform](https://img.shields.io/badge/Platform-Linux/Windows-informational?style=flat&logo=&logoColor=white&color=green) 
+![version](https://img.shields.io/badge/Version-0.0.3-informational?style=flat&logo=&logoColor=white&color=red) ![stars](https://img.shields.io/github/stars/Keyj33k/cseek-ClientIdentifier-Python?style=social) ![forks](https://img.shields.io/github/forks/Keyj33k/cseek-ClientIdentifier-Python?label=Forks&logo=&logoColor=white&color=blue) ![languages](https://img.shields.io/github/languages/count/Keyj33k/cseek-ClientIdentifier-Python?style=social&logo=&logoColor=white&color=blue) ![issues](https://img.shields.io/github/last-commit/Keyj33k/cseek-ClientIdentifier-Python?style=flat&logo=&logoColor=white&color=blue) ![platform](https://img.shields.io/badge/Platform-Linux/Windows-informational?style=flat&logo=&logoColor=white&color=green) 
 
 <a href="https://github.com/Keyj33k/cseek-ClientIdentifier-Python/archive/refs/heads/main.zip"><img src="https://github.com/Keyj33k/cseek-ClientIdentifier-Python/blob/main/img/cseek_banner.svg" alt="banner"/></a>
   
@@ -33,25 +33,26 @@ python3 cseek.py -h
 ## Options/Usage
 
 ```
-usage: cseek.py [-h] -a address -b begin_host -f final_host -u on/off [-s start_port] [-l last_port]
-example: python3 cseek.py -a 192.168.2 -b 1 -f 30 -u on -s 20 -l 100
+usage: cseek.py [-h] [-u] -a address -b begin_host -f final_host [-s start_port] [-l last_port] [-c ping_count]
+example: cseek.py -a 192.168.2 -b 1 -f 100 -c 1 --unlock -s 10 -l 90 
 
 cseek - Network Client Identifier
 
 options:
   -h, --help            show this help message and exit
+  -u, --unlock          unlock port scanning
   -a address, --addr address
                         address to ping (first three octets only)
   -b begin_host, --begin begin_host
                         host where the scan should start
   -f final_host, --final final_host
                         host where the scan should end
-  -u on/off, --unlock on/off
-                        activate or deactivate portscan
   -s start_port, --start start_port
                         port where the scan should start
   -l last_port, --last last_port
                         port where the scan should end
+  -c ping_count, --count ping_count
+                        determine ping count
 
 ```
 
@@ -109,7 +110,7 @@ SOFTWARE.
 
 <div align="center">
 
-### Tested on 5.15.0-47-generic-Ubuntu
+### Tested on 5.15.0-48-generic-Ubuntu
 
 </div>
 
