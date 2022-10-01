@@ -42,7 +42,6 @@ def write_outp_i(cur_addr: str, status: str, count: int):  # save ipsweep output
     :param cur_addr: current built address
     :param status: reachability status of the current address
     :param count: scan count
-    :return:
     """
     with open("output/cseek_output.txt", 'a') as write_output:
         write_output.write(f"\n[+] {cur_addr} ( {status} ): connected successfully, " + \
