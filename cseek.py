@@ -187,6 +187,7 @@ if __name__ == "__main__":
     parser.add_argument("-l", "--last", type=int, metavar="last_port", help="port where the scan should end")
     parser.add_argument("-c", "--count", type=int, metavar="ping_count", help="determine ping count")
     args = parser.parse_args()
+    unlock_flag = vars(args)["unlock"]
 
     def display_help():
         parser.print_help()
@@ -198,17 +199,17 @@ if __name__ == "__main__":
     # config checks
     if int(args.begin) > 252 or int(args.final) > 253:
         display_help()
-    elif (vars(args)["unlock"] is False and vars(args)["start"] is not None
-          or vars(args)["unlock"] is False and vars(args)["last"] is not None):
+    elif (unlock_flag is False and vars(args)["start"] is not None
+          or unlock_flag is False and vars(args)["last"] is not None):
         display_help()
-    elif (vars(args)["unlock"] is True and vars(args)["start"] is None
-          or vars(args)["unlock"] is True and vars(args)["last"] is None):
+    elif (unlock_flag is True and vars(args)["start"] is None
+          or unlock_flag is True and vars(args)["last"] is None):
         display_help()
 
     try:
         cseek = CSeek(args.addr, args.begin, args.final, args.start,
                       args.last, args.unlock, args.count)
-        if vars(args)["unlock"] is True: cseek.port_check()
+        if unlock_flag is True: cseek.port_check()
         cseek.octet_check()
         headline("extended") if args.unlock is not False else headline("basic")
         cseek.ping_target()  # get targets status (if enabled scan for open ports)
