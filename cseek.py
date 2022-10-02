@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
-from argparse import ArgumentParser  # command line arguments
-from logging import basicConfig, getLogger, INFO  # runtime logging
+from argparse import ArgumentParser, SUPPRESS # command line arguments
+from logging import basicConfig, getLogger, INFO # runtime logging
 from socket import socket, AF_INET, SOCK_STREAM, getservbyport, gethostbyaddr, herror  # port scanning
-from subprocess import check_output, CalledProcessError  # process calling (ping)
-from time import strftime  # formatted time specification
-from os import mkdir  # output file creation
+from subprocess import check_output, CalledProcessError # process calling (ping)
+from time import strftime # formatted time specification
+from os import mkdir # output file creation
 from sys import exit
-from datetime import datetime  # current timestamp
+from datetime import datetime # current timestamp
 
 """
 cseek - Client Identifier
@@ -17,11 +17,11 @@ from the current address.
 
 Author: Keyjeek
 Date: 18.09.22
-Version: 0.0.3
+Version: 0.0.4
 """
 
 def port_check_outp(port: int):
-    print(f"port check: port {port} is invalid")
+    print(f"cseek: port check: port {port} is invalid")
     LOGGER.error(f"port check: port {port} is invalid")
     exit(1)
 
@@ -35,7 +35,7 @@ def write_outp_p(port: int, service: str):
     with open("output/cseek_output.txt", 'a') as write_output:
         write_output.write(f" |\tproto=TCP, port={port}, status=open, service={service}\n")
 
-def write_outp_i(cur_addr: str, status: str, count: int):  # save ipsweep output
+def write_outp_i(cur_addr: str, status: str, count: int): # save ipsweep output
     """
     Function for saving the ipsweep output.
     
@@ -44,10 +44,10 @@ def write_outp_i(cur_addr: str, status: str, count: int):  # save ipsweep output
     :param count: scan count
     """
     with open("output/cseek_output.txt", 'a') as write_output:
-        write_output.write(
-            f"\n[+] {cur_addr} ( {status} ): connected successfully, count={count}, time={strftime('%H:%M:%S')}\n")
+        write_output.write((f"\n[+] {cur_addr} ( {status} ): connected successfully, "
+                            f"count={count}, time={strftime('%H:%M:%S')}\n"))
 
-
+        
 basicConfig(filename="logfile.log", format="[%(levelname)s] %(asctime)s\t%(message)s", filemode='w')
 LOGGER = getLogger()
 LOGGER.setLevel(INFO)
@@ -76,16 +76,14 @@ class CSeek:
         try:
             mkdir("output")
             with open("output/cseek_output.txt", 'w') as output_file:
-                output_file.write("cseek - output file\n")  # creating output file headline
+                output_file.write("cseek - output file\n") # creating output file headline
             LOGGER.info("output file check: created successfully")
-        except FileExistsError:
-            LOGGER.info("output file check: already exists")
-        except OSError as os_err:
-            LOGGER.error(os_err)
+        except (FileExistsError, OSError) as io_err:
+            LOGGER.info(io_err)
 
     def port_check(self):
         if self.begin_port > self.final_port:
-            print("port check: invalid order")
+            print("cseek: port check: invalid order")
             LOGGER.error("port check: invalid order")
             exit(1)
         elif self.begin_port >= 65534 or self.begin_port <= 0:
@@ -97,7 +95,7 @@ class CSeek:
 
     def octet_check(self):
         split_address = self.target_address.split(".")
-        for octet in range(3):  # loop through each single octet to compare
+        for octet in range(3): # loop through each single octet to compare
             if int(split_address[octet]) <= 0 or int(split_address[octet]) >= 253:
                 print(f"octet check: octet {octet + 1} ( {split_address[octet]} ) is invalid")
                 LOGGER.error(f"octet check: octet {octet + 1} ( {split_address[octet]} ) is invalid")
@@ -130,6 +128,7 @@ class CSeek:
         # statistics calculation section for port scanning process
         port_range = self.final_port - self.begin_port
         closed_ports = port_range - open_ports
+        
         print(f" |  port scan done: total={port_range} open={open_ports} closed={closed_ports}")
 
     def ping_target(self):
@@ -137,8 +136,7 @@ class CSeek:
         scan_start = datetime.now()
         scan_count = int(self.final_host) - int(self.begin_host) + 1  # start point to count runtime value
         host_count, active_host_count = 0, 0
-        # count the scan range
-        for octet in range(int(self.begin_host), int(self.final_host) + 1):
+        for octet in range(int(self.begin_host), int(self.final_host) + 1): # count the scan range
             # added to the given 24 bit value an 8 bit value to generate a valid IPv4 address
             final_address = f"{self.target_address}.{octet}"
             scan_count -= 1
@@ -151,9 +149,9 @@ class CSeek:
                 write_outp_i(final_address, gethostbyaddr(final_address)[0], scan_count)
                 active_host_count += 1
                 if self.activate_port_scan is not False: cseek.scan_port_range(final_address)
-            except CalledProcessError:  # raises if check_output returns a non-zero exit status
+            except CalledProcessError: # raises if check_output returns a non-zero exit status
                 print(f"{final_address}: connection failed, count={scan_count}, time={strftime('%H:%M:%S')}")
-            except herror:  # raises if gethostbyaddr returns an error
+            except herror: # raises if gethostbyaddr returns an error
                 print((f"[+] {final_address} ( unknown ): connected successfully, "
                        f"count={scan_count}, time={strftime('%H:%M:%S')}"))
                 write_outp_i(final_address, "unknown", scan_count)
@@ -174,17 +172,11 @@ class CSeek:
 
 if __name__ == "__main__":
     def headline(mode: str):
-        print(f"cseek ( 0.0.3 ) start {mode} scan at {datetime.now()}\n")
+        print(f"cseek ( 0.0.4 ) start {mode} scan at {datetime.now()}\n")
 
     parser = ArgumentParser(description="cseek - Network Client Identifier")
-
-    def display_help():
-        parser.print_help()
-        print(("\nexamples:\n"
-               "  cseek.py -a 192.168.2 -b 1 -f 100 --unlock -s 10 -l 90\n"
-               "  cseek.py -a 192.168.2 -b 1 -f 100 -c 1 "))
-        exit(1)
-
+    parser.add_argument("-v", "--version", action="version",
+                        version="cseek - Client Identifier, Version 0.0.3", help=SUPPRESS)
     parser.add_argument("-u", "--unlock", help="unlock port scanning", action="store_true")
     parser.add_argument("-a", "--addr", type=str, metavar="address",
                         help="address to ping (first three octets only)", required=True)
@@ -195,12 +187,17 @@ if __name__ == "__main__":
     parser.add_argument("-s", "--start", type=int, metavar="start_port", help="port where the scan should start")
     parser.add_argument("-l", "--last", type=int, metavar="last_port", help="port where the scan should end")
     parser.add_argument("-c", "--count", type=int, metavar="ping_count", help="determine ping count")
-
     args = parser.parse_args()
-    address = args.addr
+
+    def display_help():
+        parser.print_help()
+        print(("\nexamples:\n"
+               "  cseek.py -a 192.168.2 -b 1 -f 100 --unlock -s 10 -l 90\n"
+               "  cseek.py -a 192.168.2 -b 1 -f 100 -c 1 "))
+        exit(1)
 
     # config checks
-    if int(args.begin) > 252 or int(args.final) > 253 or len(address.split(".")) != 3:
+    if int(args.begin) > 252 or int(args.final) > 253:
         display_help()
     elif (vars(args)["unlock"] is False and vars(args)["start"] is not None
           or vars(args)["unlock"] is False and vars(args)["last"] is not None):
@@ -212,12 +209,12 @@ if __name__ == "__main__":
     try:
         cseek = CSeek(args.addr, args.begin, args.final, args.start,
                       args.last, args.unlock, args.count)
+        if vars(args)["unlock"] is True: cseek.port_check()
         cseek.octet_check()
-        cseek.create_output_file()
         headline("extended") if args.unlock is not False else headline("basic")
         cseek.ping_target()  # get targets status (if enabled scan for open ports)
     except (IndexError, AttributeError, ValueError):
-        parser.print_help()
+        display_help()
     except TypeError:
         print(('\ninterrupted: cannot process because of invalid configurations\n'
                'type "python3 cseek.py -h" to get more informations'))
