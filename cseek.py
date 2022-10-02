@@ -20,12 +20,10 @@ Date: 18.09.22
 Version: 0.0.3
 """
 
-
 def port_check_outp(port: int):
     print(f"port check: port {port} is invalid")
     LOGGER.error(f"port check: port {port} is invalid")
     exit(1)
-
 
 def write_outp_p(port: int, service: str):
     """
@@ -36,7 +34,6 @@ def write_outp_p(port: int, service: str):
     """
     with open("output/cseek_output.txt", 'a') as write_output:
         write_output.write(f" |\tproto=TCP, port={port}, status=open, service={service}\n")
-
 
 def write_outp_i(cur_addr: str, status: str, count: int):  # save ipsweep output
     """
@@ -82,7 +79,9 @@ class CSeek:
                 output_file.write("cseek - output file\n")  # creating output file headline
             LOGGER.info("output file check: created successfully")
         except FileExistsError:
-            LOGGER.info("output file check: successful")
+            LOGGER.info("output file check: already exists")
+        except OSError as os_err:
+            LOGGER.error(os_err)
 
     def port_check(self):
         if self.begin_port > self.final_port:
@@ -94,7 +93,7 @@ class CSeek:
         elif self.final_port >= 65535 or self.final_port <= 0:
             port_check_outp(self.final_port)
         else:
-            LOGGER.info("port check: successful")
+            LOGGER.info("port check: passed")
 
     def octet_check(self):
         split_address = self.target_address.split(".")
