@@ -192,13 +192,9 @@ if __name__ == '__main__':
     # config checks
     if int(args.begin) > 252 or int(args.final) > 253 or len(address.split(".")) != 3:
         display_help()
-    elif vars(args)["unlock"] is False and vars(args)["start"] is not None:
+    elif vars(args)["unlock"] is False and vars(args)["start"] is not None or vars(args)["unlock"] is False and vars(args)["last"] is not None:
         display_help()
-    elif vars(args)["unlock"] is False and vars(args)["last"] is not None:
-        display_help()
-    elif vars(args)["unlock"] is True and vars(args)["start"] is None:
-        display_help()
-    elif vars(args)["unlock"] is True and vars(args)["last"] is None:
+    elif vars(args)["unlock"] is True and vars(args)["start"] is None or vars(args)["unlock"] is True and vars(args)["last"] is None:
         display_help()
 
     try:
@@ -212,14 +208,10 @@ if __name__ == '__main__':
             print(f"cseek ( 0.0.3 ) start basic scan at {datetime.now()}\n")
 
         cseek.ping_target()  # get targets status (if enabled scan for open ports)
-    except IndexError:
-        parser.print_help()
-    except AttributeError:
+    except (IndexError, AttributeError, ValueError):
         parser.print_help()
     except TypeError:
         print('\ninterrupted: cannot process because of invalid configurations\n' + \
               'type "python3 cseek.py -h" to get more informations')
-    except ValueError:
-        parser.print_help()
     except KeyboardInterrupt:
         print("\ncseek exits due interruption")
