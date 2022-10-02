@@ -197,7 +197,8 @@ if __name__ == "__main__":
         exit(1)
 
     # config checks
-    if int(args.begin) >= 252 or int(args.final) >= 253:
+    if (int(args.begin) >= 252 or int(args.final) >= 253
+          or int(args.begin) <= 0 or int(args.final) <= 0):
         display_help()
     elif int(args.begin) > int(args.final):
         print("cseek: the first host cannot be bigger than the last host")
