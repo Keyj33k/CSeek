@@ -109,7 +109,6 @@ class CSeek:
         
         :param target_address: previously built valid ipv4 address
         """
-        cseek.port_check()
         open_ports = 0
         for port in range(self.begin_port, self.final_port):
             # creating a socket connection using IPv4 and TCP configurations
