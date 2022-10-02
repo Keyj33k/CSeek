@@ -28,7 +28,7 @@ def port_check_outp(port: int):
 def write_outp_p(port: int, service: str):
     """
     Function for saving the port scanning output.
-
+    
     :param port: current port to scan
     :param service: service behind current port
     """
@@ -38,7 +38,7 @@ def write_outp_p(port: int, service: str):
 def write_outp_i(cur_addr: str, status: str, count: int):  # save ipsweep output
     """
     Function for saving the ipsweep output.
-
+    
     :param cur_addr: current built address
     :param status: reachability status of the current address
     :param count: scan count
@@ -108,7 +108,7 @@ class CSeek:
     def scan_port_range(self, target_address):
         """
         Port scanning function (will be enabled if --unlock flag is given).
-
+        
         :param target_address: previously built valid ipv4 address
         """
         cseek.port_check()
@@ -119,7 +119,7 @@ class CSeek:
                 port_scan.settimeout(5)
                 if port_scan.connect_ex((target_address, port)) == 0:
                     open_ports += 1
-                    
+
                     try:
                         print(f" |\tproto=TCP, port={port}, status=open, service={getservbyport(port)}")
                         write_outp_p(port, getservbyport(port))
@@ -146,16 +146,16 @@ class CSeek:
 
             try:
                 check_output(["ping", "-c", str(self.ping_count), final_address])
-                print(f"[+] {final_address} ( {gethostbyaddr(final_address)[0]} ): connected successfully, " + \
-                      f"count={scan_count}, time={strftime('%H:%M:%S')}")
+                print((f"[+] {final_address} ( {gethostbyaddr(final_address)[0]} ): connected successfully, "
+                       f"count={scan_count}, time={strftime('%H:%M:%S')}"))
                 write_outp_i(final_address, gethostbyaddr(final_address)[0], scan_count)
                 active_host_count += 1
                 if self.activate_port_scan is not False: cseek.scan_port_range(final_address)
             except CalledProcessError:  # raises if check_output returns a non-zero exit status
                 print(f"{final_address}: connection failed, count={scan_count}, time={strftime('%H:%M:%S')}")
             except herror:  # raises if gethostbyaddr returns an error
-                print(f"[+] {final_address} ( unknown ): connected successfully, " + \
-                      f"count={scan_count}, time={strftime('%H:%M:%S')}")
+                print((f"[+] {final_address} ( unknown ): connected successfully, "
+                       f"count={scan_count}, time={strftime('%H:%M:%S')}"))
                 write_outp_i(final_address, "unknown", scan_count)
 
         # statistics calculation section for ipsweep scanning process
@@ -167,9 +167,9 @@ class CSeek:
         needed_time = scan_end - scan_start
 
         print("\n***************** statistics *****************")
-        print(f"total={host_count} active={active_hosts} " + \
-              f"inactive={inactive_hosts} min={min_address}\n" + \
-              f"max={max_address} runtime={needed_time}")
+        print((f"total={host_count} active={active_hosts} "
+               f"inactive={inactive_hosts} min={min_address}\n"
+               f"max={max_address} runtime={needed_time}"))
 
 
 if __name__ == "__main__":
@@ -200,10 +200,10 @@ if __name__ == "__main__":
     if int(args.begin) > 252 or int(args.final) > 253 or len(address.split(".")) != 3:
         display_help()
     elif (vars(args)["unlock"] is False and vars(args)["start"] is not None
-            or vars(args)["unlock"] is False and vars(args)["last"] is not None):
+          or vars(args)["unlock"] is False and vars(args)["last"] is not None):
         display_help()
     elif (vars(args)["unlock"] is True and vars(args)["start"] is None
-            or vars(args)["unlock"] is True and vars(args)["last"] is None):
+          or vars(args)["unlock"] is True and vars(args)["last"] is None):
         display_help()
 
     try:
@@ -216,7 +216,7 @@ if __name__ == "__main__":
     except (IndexError, AttributeError, ValueError):
         parser.print_help()
     except TypeError:
-        print('\ninterrupted: cannot process because of invalid configurations\n' + \
-              'type "python3 cseek.py -h" to get more informations')
+        print(('\ninterrupted: cannot process because of invalid configurations\n'
+               'type "python3 cseek.py -h" to get more informations'))
     except KeyboardInterrupt:
         print("\ncseek exits due interruption")
