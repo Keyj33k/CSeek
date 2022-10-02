@@ -180,6 +180,9 @@ if __name__ == "__main__":
 
     def display_help():
         parser.print_help()
+        print(("\nexamples:\n"
+               "  cseek.py -a 192.168.2 -b 1 -f 100 --unlock -s 10 -l 90\n"
+               "  cseek.py -a 192.168.2 -b 1 -f 100 -c 1 "))
         exit(1)
 
     parser.add_argument("-u", "--unlock", help="unlock port scanning", action="store_true")
