@@ -20,6 +20,13 @@ Date: 18.09.22
 Version: 0.0.4
 """
 
+def host_conf_check(b_host: int, l_host: int):
+    if int(b_host) <= 0 or int(l_host) <= 0:
+        print("cseek: invalid config detected")
+        return False
+    else:
+        return True
+
 def port_check_outp(port: int):
     print(f"cseek: port check: port {port} is invalid")
     LOGGER.error(f"port check: port {port} is invalid")
@@ -197,8 +204,7 @@ if __name__ == "__main__":
         exit(1)
 
     # config checks
-    if (int(args.begin) >= 252 or int(args.final) >= 253
-          or int(args.begin) <= 0 or int(args.final) <= 0):
+    if int(args.begin) >= 253 or int(args.final) >= 254:
         display_help()
     elif int(args.begin) > int(args.final):
         print("cseek: the first host cannot be bigger than the last host")
@@ -213,6 +219,7 @@ if __name__ == "__main__":
     try:
         cseek = CSeek(args.addr, args.begin, args.final, args.start,
                       args.last, args.unlock, args.count)
+        if host_conf_check(args.begin, args.final) is not True: exit(1)
         if unlock_flag is True: cseek.port_check()
         cseek.octet_check()
         headline("extended") if args.unlock is not False else headline("basic")
