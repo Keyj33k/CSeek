@@ -215,6 +215,7 @@ if __name__ == "__main__":
     try:
         cseek = CSeek(args.addr, args.begin, args.final, args.start,
                       args.last, args.unlock, args.count)
+        cseek.create_output_file()
         if host_conf_check(args.begin, args.final) is not True: exit(1)
         if unlock_flag is True: cseek.port_check()
         cseek.octet_check()
