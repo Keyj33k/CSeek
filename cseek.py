@@ -28,9 +28,8 @@ def host_conf_check(b_host: int, l_host: int):
         return True
 
 def port_check_outp(port: int):
-    print(f"cseek: port check: port {port} is invalid")
     LOGGER.error(f"port check: port {port} is invalid")
-    exit(1)
+    exit(f"cseek: port check: port {port} is invalid")
 
 def write_outp_p(port: int, service: str):
     """
@@ -90,9 +89,8 @@ class CSeek:
 
     def port_check(self):
         if self.begin_port > self.final_port:
-            print("cseek: port check: invalid order")
             LOGGER.error("port check: invalid order")
-            exit(1)
+            exit("cseek: port check: invalid order")
         elif self.begin_port >= 65534 or self.begin_port <= 0:
             port_check_outp(self.begin_port)
         elif self.final_port >= 65535 or self.final_port <= 0:
@@ -104,9 +102,8 @@ class CSeek:
         split_address = self.target_address.split(".")
         for octet in range(3): # loop through each single octet to compare
             if int(split_address[octet]) <= 0 or int(split_address[octet]) >= 253:
-                print(f"octet check: octet {octet + 1} ( {split_address[octet]} ) is invalid")
                 LOGGER.error(f"octet check: octet {octet + 1} ( {split_address[octet]} ) is invalid")
-                exit(1)
+                exit(f"octet check: octet {octet + 1} ( {split_address[octet]} ) is invalid")
             else:
                 LOGGER.info(f"octet check: octet {octet + 1} ( {split_address[octet]} ) passed")
 
@@ -120,10 +117,9 @@ class CSeek:
         for port in range(self.begin_port, self.final_port):
             # creating a socket connection using IPv4 and TCP configurations
             with socket(AF_INET, SOCK_STREAM) as port_scan:
-                port_scan.settimeout(5)
+                port_scan.settimeout(2)
                 if port_scan.connect_ex((target_address, port)) == 0:
                     open_ports += 1
-
                     try:
                         print(f" |\tproto=TCP, port={port}, status=open, service={getservbyport(port)}")
                         write_outp_p(port, getservbyport(port))
