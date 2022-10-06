@@ -24,10 +24,10 @@ RESET = "\033[0m"
 
 def host_conf_check(b_host: int, l_host: int):
     if int(b_host) <= 0 or int(l_host) <= 0:
-        print(f"host config check: {RED}FALSE{RESET}")
+        print(f"host check: {RED}FALSE{RESET}")
         return False
     else:
-        print(f"host config check: {GREEN}OK{RESET}")
+        print(f"host check: {GREEN}OK{RESET}")
         return True
 
 def port_check_outp(port: int):
