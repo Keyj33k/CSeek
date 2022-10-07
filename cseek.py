@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
-from argparse import ArgumentParser, SUPPRESS 
-from socket import socket, AF_INET, SOCK_STREAM, getservbyport, gethostbyaddr, herror  
-from subprocess import check_output, CalledProcessError  
-from time import strftime  
-from os import mkdir 
+from argparse import ArgumentParser, SUPPRESS
+from socket import socket, AF_INET, SOCK_STREAM, getservbyport, gethostbyaddr, herror
+from subprocess import check_output, CalledProcessError
+from time import strftime
+from os import mkdir
 from sys import exit
-from datetime import datetime  
+from datetime import datetime
 
 """
 cseek - Client Identifier
@@ -37,7 +37,7 @@ def write_outp_p(port: int, service: str):
     with open("output/cseek_output.txt", 'a') as write_output:
         write_output.write(f" |\tproto=TCP, port={port}, status=open, service={service}\n")
 
-def write_outp_i(cur_addr: str, status: str, count: int):  
+def write_outp_i(cur_addr: str, status: str, count: int):
     with open("output/cseek_output.txt", 'a') as write_output:
         write_output.write((f"\n[+] {cur_addr} ( {status} ): connected successfully, "
                             f"count={count}, time={strftime('%H:%M:%S')}\n"))
@@ -60,7 +60,7 @@ class CSeek:
         try:
             mkdir("output")
             with open("output/cseek_output.txt", 'w') as output_file:
-                output_file.write("cseek - output file\n") 
+                output_file.write("cseek - output file\n")
             print(f"output file check: {GREEN}OK{RESET}")
         except (FileExistsError, OSError):
             print(f"output file check: {GREEN}OK{RESET}")
@@ -77,7 +77,7 @@ class CSeek:
 
     def octet_check(self):
         split_address = self.target_address.split(".")
-        for octet in range(3): 
+        for octet in range(3):
             if int(split_address[octet]) <= 0 or int(split_address[octet]) >= 253:
                 exit(f"octet check: octet {octet + 1} ( {split_address[octet]} ) {RED}FALSE{RESET}")
             else:
@@ -101,7 +101,7 @@ class CSeek:
         print(f" |  port scan done: total={port_range} open={open_ports} closed={closed_ports}")
 
     def ping_target(self):
-        if self.ping_count is None: self.ping_count = 2  
+        if self.ping_count is None: self.ping_count = 2
         scan_start = datetime.now()
         scan_count = int(self.final_host) - int(self.begin_host) + 1
         host_count, active_host_count = 0, 0
@@ -112,15 +112,15 @@ class CSeek:
 
             try:
                 check_output(["ping", "-c", str(self.ping_count), final_address])
-                print((f"[{GREEN}+{RESET}] {final_address} ( {gethostbyaddr(final_address)[0]} ): {GREEN}connected "
-                       f"successfully{RESET}, count={scan_count}, time={strftime('%H:%M:%S')}"))
+                print((f"[{GREEN}+{RESET}] {final_address} ( {GREEN}{gethostbyaddr(final_address)[0]}{RESET} ): "
+                       f"{GREEN}connected successfully{RESET}, count={scan_count}, time={strftime('%H:%M:%S')}"))
                 write_outp_i(final_address, gethostbyaddr(final_address)[0], scan_count)
                 active_host_count += 1
                 if self.activate_port_scan is not False: cseek.scan_port_range(final_address)
-            except CalledProcessError:  
+            except CalledProcessError:
                 print(f"{final_address}: {RED}connection failed{RESET}, "
                       f"count={scan_count}, time={strftime('%H:%M:%S')}")
-            except herror:  
+            except herror:
                 print((f"[{GREEN}+{RESET}] {final_address} ( {RED}unknown{RESET} ): {GREEN}connected "
                        f"successfully{RESET}, count={scan_count}, time={strftime('%H:%M:%S')}"))
                 write_outp_i(final_address, "unknown", scan_count)
@@ -138,7 +138,7 @@ class CSeek:
 
 if __name__ == "__main__":
     def headline(mode: str):
-        print(f"\ncseek ( 0.0.4 ) start {mode} scan at {datetime.now()}\n")
+        print(f"\ncseek ( 0.0.4 ) start {mode} scan at {datetime.now()} ...\n")
 
     parser = ArgumentParser(description="cseek - Network Client Identifier")
     parser.add_argument("-v", "--version", action="version",
@@ -170,12 +170,13 @@ if __name__ == "__main__":
     try:
         cseek = CSeek(args.addr, args.begin, args.final, args.start,
                       args.last, args.unlock, args.count)
+        print("running checks ...\n")
         cseek.create_output_file()
         if host_conf_check(args.begin, args.final) is not True: exit(1)
         if unlock_flag is True: cseek.port_check()
         cseek.octet_check()
         headline("extended") if args.unlock is not False else headline("basic")
-        cseek.ping_target() 
+        cseek.ping_target()
     except (IndexError, AttributeError, ValueError):
         parser.print_help()
         print(("\nexamples:\n"
