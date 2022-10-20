@@ -65,12 +65,12 @@ class CSeek:
     def port_check(self):
         ports = [self.begin_port, self.final_port]
 
-        if self.begin_port > self.final_port:
+        if ports[0] > ports[1]:
             exit(f"cseek: {color['R']}invalid config{color['D']}, start host cannot be bigger then the last host")
 
         for port in ports:
-            if port >= 65534 or port <= 0: exit(f"cseek: {color['R']}invalid config{color['D']}, "
-                                                f"port {port} is invalid")
+            if port >= 65534 or port <= 0:
+                exit(f"cseek: {color['R']}invalid config{color['D']}, port {port} is invalid")
 
     def octet_check(self):
         split_address = self.target_address.split(".")
